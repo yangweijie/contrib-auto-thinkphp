@@ -1,0 +1,41 @@
+{
+  "name": "yangweijie/opentelemetry-auto-thinkphp",
+  "description": "OpenTelemetry auto-instrumentation for ThinkPHP",
+  "keywords": ["opentelemetry", "otel", "open-telemetry", "tracing", "ThinkPHP", "instrumentation"],
+  "type": "library",
+  "homepage": "https://opentelemetry.io/docs/php",
+  "readme": "./README.md",
+  "license": "Apache-2.0",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": "^8.0",
+    "ext-json": "*",
+    "ext-opentelemetry": "*",
+    "topthink/framework": "^6.0 ^8.0",
+    "open-telemetry/api": "^1.0",
+    "open-telemetry/sem-conv": "^1.24"
+  },
+  "require-dev": {
+    "guzzlehttp/guzzle": "*",
+    "nunomaduro/collision": "*",
+    "open-telemetry/sdk": "^1.0",
+    "php-http/mock-client": "*",
+    "yangweijie/think-ignition": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "OpenTelemetry\\Contrib\\Instrumentation\\ThinkPHP\\": "src/"
+    },
+    "files": [
+      "_register.php"
+    ]
+  },
+  "config": {
+    "lock": false,
+    "sort-packages": true,
+    "allow-plugins": {
+      "php-http/discovery": false
+    }
+  }
+}
