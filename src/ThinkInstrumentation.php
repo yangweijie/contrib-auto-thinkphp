@@ -20,7 +20,6 @@ class ThinkInstrumentation
             'https://opentelemetry.io/schemas/1.24.0'
         );
 
-
         hooks\console\Command::hook($instrumentation);
         hooks\contracts\console\Kernel::hook($instrumentation);
         hooks\contracts\http\kernel::hook($instrumentation);
