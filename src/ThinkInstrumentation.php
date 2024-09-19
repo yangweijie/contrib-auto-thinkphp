@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OpenTelemetry\Contrib\Instrumentation\ThinkPHP;
 
+use OpenTelemetry\API\Globals;
 use OpenTelemetry\API\Instrumentation\CachedInstrumentation;
 use OpenTelemetry\SDK\Common\Configuration\Configuration;
 
@@ -19,15 +20,13 @@ class ThinkInstrumentation
             'https://opentelemetry.io/schemas/1.24.0'
         );
 
-//        Hooks\Illuminate\Console\Command::hook($instrumentation);
-//        Hooks\Illuminate\Contracts\Console\Kernel::hook($instrumentation);
-//        Hooks\Illuminate\Contracts\Http\Kernel::hook($instrumentation);
+
+        hooks\console\Command::hook($instrumentation);
+        hooks\contracts\console\Kernel::hook($instrumentation);
+        hooks\contracts\http\kernel::hook($instrumentation);
 //        Hooks\Illuminate\Contracts\Queue\Queue::hook($instrumentation);
-//        Hooks\Illuminate\Foundation\Application::hook($instrumentation);
-//        Hooks\Illuminate\Foundation\Console\ServeCommand::hook($instrumentation);
-//        Hooks\Illuminate\Queue\SyncQueue::hook($instrumentation);
-//        Hooks\Illuminate\Queue\Queue::hook($instrumentation);
-//        Hooks\Illuminate\Queue\Worker::hook($instrumentation);
+        hooks\foundation\Application::hook($instrumentation);
+        hooks\foundation\console\ServerCommand::hook($instrumentation);
     }
 
     public static function shouldTraceCli(): bool

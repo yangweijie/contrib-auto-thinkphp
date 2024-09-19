@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OpenTelemetry\Contrib\Instrumentation\ThinkPHP\Propagators;
+namespace OpenTelemetry\Contrib\Instrumentation\ThinkPHP\propagators;
 
 use function assert;
 use think\Request;

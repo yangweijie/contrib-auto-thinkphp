@@ -16,4 +16,4 @@ if (extension_loaded('opentelemetry') === false) {
     return;
 }
 
-LaravelInstrumentation::register();
+ThinkInstrumentation::register();

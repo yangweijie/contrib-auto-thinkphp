@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OpenTelemetry\Contrib\Instrumentation\ThinkPHP\Watchers;
+namespace OpenTelemetry\Contrib\Instrumentation\ThinkPHP\watchers;
 
 use think\App;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OpenTelemetry\Contrib\Instrumentation\Laravel\Propagators;
+namespace OpenTelemetry\Contrib\Instrumentation\ThinkPHP\propagators;
 
 use function assert;
 use OpenTelemetry\Context\Propagation\PropagationSetterInterface;
@@ -24,6 +24,6 @@ class ResponsePropagationSetter implements PropagationSetterInterface
     {
         assert($carrier instanceof Response);
 
-        $carrier->headers->set($key, $value);
+        $carrier->header([$key=>$value]);
     }
 }

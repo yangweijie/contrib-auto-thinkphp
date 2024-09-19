@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\contracts\http;
 
-use Illuminate\Contracts\Http\Kernel as KernelContract;
-use Illuminate\Http\Request;
+use think\Http as KernelContract;
+use think\Request;
 use OpenTelemetry\API\Globals;
 use OpenTelemetry\API\Trace\Span;
 use OpenTelemetry\API\Trace\SpanInterface;
@@ -16,7 +16,8 @@ use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\ThinkHook;
 use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\ThinkHookTrait;
 use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\PostHookTrait;
 use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\propagators\HeadersPropagator;
-use OpenTelemetry\Contrib\Instrumentation\Laravel\propagators\ResponsePropagationSetter;
+use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\propagators\ResponsePropagationSetter;
+use think\Route\Rule;
 use function OpenTelemetry\Instrumentation\hook;
 use OpenTelemetry\SemConv\TraceAttributes;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,17 +55,17 @@ class Kernel implements ThinkHook
                     $parent = Globals::propagator()->extract($request, HeadersPropagator::instance());
                     $span = $builder
                         ->setParent($parent)
-                        ->setAttribute(TraceAttributes::URL_FULL, $request->fullUrl())
+                        ->setAttribute(TraceAttributes::URL_FULL, $request->url())
                         ->setAttribute(TraceAttributes::HTTP_REQUEST_METHOD, $request->method())
                         ->setAttribute(TraceAttributes::HTTP_REQUEST_BODY_SIZE, $request->header('Content-Length'))
-                        ->setAttribute(TraceAttributes::URL_SCHEME, $request->getScheme())
-                        ->setAttribute(TraceAttributes::NETWORK_PROTOCOL_VERSION, $request->getProtocolVersion())
+                        ->setAttribute(TraceAttributes::URL_SCHEME, $request->scheme())
+                        ->setAttribute(TraceAttributes::NETWORK_PROTOCOL_VERSION, $request->protocol())
                         ->setAttribute(TraceAttributes::NETWORK_PEER_ADDRESS, $request->ip())
                         ->setAttribute(TraceAttributes::URL_PATH, $this->httpTarget($request))
                         ->setAttribute(TraceAttributes::SERVER_ADDRESS, $this->httpHostName($request))
-                        ->setAttribute(TraceAttributes::SERVER_PORT, $request->getPort())
+                        ->setAttribute(TraceAttributes::SERVER_PORT, $request->port())
                         ->setAttribute(TraceAttributes::CLIENT_PORT, $request->server('REMOTE_PORT'))
-                        ->setAttribute(TraceAttributes::USER_AGENT_ORIGINAL, $request->userAgent())
+                        ->setAttribute(TraceAttributes::USER_AGENT_ORIGINAL, $request->server('HTTP_USER_AGENT'))
                         ->startSpan();
                     $request->attributes->set(SpanInterface::class, $span);
                 } else {
@@ -82,9 +83,10 @@ class Kernel implements ThinkHook
                 $span = Span::fromContext($scope->context());
 
                 $request = ($params[0] instanceof Request) ? $params[0] : null;
-                $route = $request?->route();
+                $rule = $request?->rule();
 
-                if ($request && $route instanceof Route) {
+                if ($request && $rule instanceof Rule) {
+                    $route = $rule->getRoute();
                     $span->updateName("{$request->method()} /" . ltrim($route->uri, '/'));
                     $span->setAttribute(TraceAttributes::HTTP_ROUTE, $route->uri);
                 }
@@ -121,10 +123,10 @@ class Kernel implements ThinkHook
 
     private function httpTarget(Request $request): string
     {
-        $query = $request->getQueryString();
-        $question = $request->getBaseUrl() . $request->getPathInfo() === '/' ? '/?' : '?';
+//        $query = $request->get();
+//        $question = $request->baseUrl() . $request->pathinfo() === '/' ? '/?' : '?';
 
-        return $query ? $request->path() . $question . $query : $request->path();
+        return $request->url(true);
     }
 
     private function httpHostName(Request $request): string
