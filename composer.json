@@ -6,16 +6,16 @@
   "homepage": "https://opentelemetry.io/docs/php",
   "readme": "./README.md",
   "license": "Apache-2.0",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "require": {
     "php": "^8.0",
     "ext-json": "*",
     "ext-opentelemetry": "*",
     "topthink/framework": "^6.0 | ^8.0",
     "topthink/think-orm": "^2.0 | ^3.0",
-    "open-telemetry/api": "^1.0",
-    "open-telemetry/sdk": "^1.0",
-    "open-telemetry/sem-conv": "^1.24"
+    "open-telemetry/sem-conv": "1.27.*",
+    "open-telemetry/api": "1.1.0beta2",
+    "psr/simple-cache": "3.0.0"
   },
   "require-dev": {
     "guzzlehttp/guzzle": "*",

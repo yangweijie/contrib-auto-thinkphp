@@ -7,8 +7,9 @@ use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\ThinkInstrumentation;
 use OpenTelemetry\SDK\Sdk;
 use think\Env;
 
+$app_path = realpath(\Composer\InstalledVersions::getRootPackage()['install_path']);
 $env = new Env();
-$env->load(realpath('..').DIRECTORY_SEPARATOR.'.env');
+$env->load($app_path.DIRECTORY_SEPARATOR.'.env');
 foreach ($env->get() as $key => $value) {
     putenv($key.'='.$value);
 }
@@ -17,7 +18,7 @@ if (class_exists(Sdk::class) && Sdk::isInstrumentationDisabled(ThinkInstrumentat
 }
 
 if (extension_loaded('opentelemetry') === false) {
-    trigger_error('The opentelemetry extension must be loaded in order to autoload the OpenTelemetry Laravel auto-instrumentation', E_USER_WARNING);
+    trigger_error('The opentelemetry extension must be loaded in order to autoload the OpenTelemetry ThinkPHP auto-instrumentation', E_USER_WARNING);
     return;
 }
 

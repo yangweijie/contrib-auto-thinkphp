@@ -27,7 +27,10 @@ class Kernel implements ThinkHook
     public function instrument(): void
     {
         if (ThinkInstrumentation::shouldTraceCli()) {
+//            var_dump(111);
             $this->hookHandle();
+        }else{
+//            var_dump(222);
         }
     }
 

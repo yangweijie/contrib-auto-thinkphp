@@ -67,7 +67,7 @@ class Kernel implements ThinkHook
                         ->setAttribute(TraceAttributes::CLIENT_PORT, $request->server('REMOTE_PORT'))
                         ->setAttribute(TraceAttributes::USER_AGENT_ORIGINAL, $request->server('HTTP_USER_AGENT'))
                         ->startSpan();
-                    $request->attributes->set(SpanInterface::class, $span);
+//                    $request->attributes->set(SpanInterface::class, $span);
                 } else {
                     $span = $builder->startSpan();
                 }
@@ -81,15 +81,17 @@ class Kernel implements ThinkHook
                     return;
                 }
                 $span = Span::fromContext($scope->context());
-                var_dump($span);
+//                var_dump($span);
 
                 $request = ($params[0] instanceof Request) ? $params[0] : null;
                 $rule = $request?->rule();
 
                 if ($request && $rule instanceof Rule) {
                     $route = $rule->getRoute();
-                    $span->updateName("{$request->method()} /" . ltrim($route->uri, '/'));
-                    $span->setAttribute(TraceAttributes::HTTP_ROUTE, $route->uri);
+                    if($route){
+                        $span->updateName("{$request->method()} /" . ltrim($route->uri, '/'));
+                        $span->setAttribute(TraceAttributes::HTTP_ROUTE, $route->uri);
+                    }
                 }
 
                 if ($response) {
