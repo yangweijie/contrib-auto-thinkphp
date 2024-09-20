@@ -5,10 +5,13 @@ declare(strict_types=1);
 
 use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\ThinkInstrumentation;
 use OpenTelemetry\SDK\Sdk;
+use think\Env;
 
-$dotenv = Dotenv\Dotenv::createImmutable(realpath('.'));
-$dotenv->safeLoad();
-
+$env = new Env();
+$env->load(realpath('..').DIRECTORY_SEPARATOR.'.env');
+foreach ($env->get() as $key => $value) {
+    putenv($key.'='.$value);
+}
 if (class_exists(Sdk::class) && Sdk::isInstrumentationDisabled(ThinkInstrumentation::NAME) === true) {
     return;
 }

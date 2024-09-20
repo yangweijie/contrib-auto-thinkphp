@@ -6,6 +6,7 @@ namespace OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\contracts\http;
 
 use think\Http as KernelContract;
 use think\Request;
+use think\Response;
 use OpenTelemetry\API\Globals;
 use OpenTelemetry\API\Trace\Span;
 use OpenTelemetry\API\Trace\SpanInterface;
@@ -20,7 +21,6 @@ use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\propagators\ResponsePropagati
 use think\Route\Rule;
 use function OpenTelemetry\Instrumentation\hook;
 use OpenTelemetry\SemConv\TraceAttributes;
-use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Kernel implements ThinkHook
@@ -37,9 +37,9 @@ class Kernel implements ThinkHook
     {
         return hook(
             KernelContract::class,
-            'handle',
+            'runWithRequest',
             pre: function (KernelContract $kernel, array $params, string $class, string $function, ?string $filename, ?int $lineno) {
-                $request = ($params[0] instanceof Request) ? $params[0] : null;
+                $request = ($params && $params[0] instanceof Request) ? $params[0] : null;
                 /** @psalm-suppress ArgumentTypeCoercion */
                 $builder = $this->instrumentation
                     ->tracer()
@@ -81,6 +81,7 @@ class Kernel implements ThinkHook
                     return;
                 }
                 $span = Span::fromContext($scope->context());
+                var_dump($span);
 
                 $request = ($params[0] instanceof Request) ? $params[0] : null;
                 $rule = $request?->rule();
@@ -92,12 +93,12 @@ class Kernel implements ThinkHook
                 }
 
                 if ($response) {
-                    if ($response->getStatusCode() >= 500) {
+                    if ($response->getCode() >= 500) {
                         $span->setStatus(StatusCode::STATUS_ERROR);
                     }
-                    $span->setAttribute(TraceAttributes::HTTP_RESPONSE_STATUS_CODE, $response->getStatusCode());
-                    $span->setAttribute(TraceAttributes::NETWORK_PROTOCOL_VERSION, $response->getProtocolVersion());
-                    $span->setAttribute(TraceAttributes::HTTP_RESPONSE_BODY_SIZE, $response->headers->get('Content-Length'));
+                    $span->setAttribute(TraceAttributes::HTTP_RESPONSE_STATUS_CODE, $response->getCode());
+//                    $span->setAttribute(TraceAttributes::NETWORK_PROTOCOL_VERSION, $response->getHeader(''));
+                    $span->setAttribute(TraceAttributes::HTTP_RESPONSE_BODY_SIZE, $response->getHeader('Content-Length'));
 
                     // Propagate server-timing header to response, if ServerTimingPropagator is present
                     if (class_exists('OpenTelemetry\Contrib\Propagation\ServerTiming\ServerTimingPropagator')) {

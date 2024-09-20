@@ -22,6 +22,7 @@ class LogWatcher extends Watcher
     /** @psalm-suppress UndefinedInterfaceMethod */
     public function register(App $app): void
     {
+        var_dump($instrumentation->logger());
         /** @phan-suppress-next-line PhanTypeArraySuspicious */
         $pre = static function (LoggerInterface $object, array $params, string $class, string $function): array {
             $id = spl_object_id($object);
