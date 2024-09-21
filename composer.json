@@ -11,10 +11,14 @@
     "php": "^8.0",
     "ext-json": "*",
     "ext-opentelemetry": "*",
+    "ext-reflection": "*",
     "topthink/framework": "^6.0 | ^8.0",
     "topthink/think-orm": "^2.0 | ^3.0",
-    "open-telemetry/sem-conv": "1.27.*",
     "open-telemetry/api": "1.1.0beta2",
+    "open-telemetry/sdk": "^1.0.5",
+    "open-telemetry/opentelemetry-propagation-server-timing": "*",
+    "open-telemetry/opentelemetry-propagation-traceresponse": "*",
+    "open-telemetry/sem-conv": "1.27.*",
     "psr/simple-cache": "3.0.0"
   },
   "require-dev": {

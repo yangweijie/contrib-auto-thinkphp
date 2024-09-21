@@ -49,10 +49,12 @@ class Kernel implements ThinkHook
                     ->setAttribute(TraceAttributes::CODE_NAMESPACE, $class)
                     ->setAttribute(TraceAttributes::CODE_FILEPATH, $filename)
                     ->setAttribute(TraceAttributes::CODE_LINENO, $lineno);
+                var_dump($builder);
                 $parent = Context::getCurrent();
                 if ($request) {
                     /** @phan-suppress-next-line PhanAccessMethodInternal */
                     $parent = Globals::propagator()->extract($request, HeadersPropagator::instance());
+//                    var_dump($request->header());
                     $span = $builder
                         ->setParent($parent)
                         ->setAttribute(TraceAttributes::URL_FULL, $request->url())
@@ -72,14 +74,14 @@ class Kernel implements ThinkHook
                     $span = $builder->startSpan();
                 }
                 Context::storage()->attach($span->storeInContext($parent));
-
                 return [$request];
             },
             post: function (KernelContract $kernel, array $params, ?Response $response, ?Throwable $exception) {
                 $scope = Context::storage()->scope();
                 if (!$scope) {
-                    return;
+                    return $response;
                 }
+                $scope->detach();
                 $span = Span::fromContext($scope->context());
 //                var_dump($span);
 
@@ -118,6 +120,8 @@ class Kernel implements ThinkHook
                         $prop->inject($response, ResponsePropagationSetter::instance(), $scope->context());
                     }
                 }
+
+//                var_dump($response->getHeader());
 
                 $this->endSpan($exception);
             }

@@ -26,13 +26,12 @@ class HeadersPropagator implements PropagationGetterInterface
         assert($carrier instanceof Request);
 
         /** @psalm-suppress LessSpecificReturnStatement */
-        return $carrier->headers->keys();
+        return $carrier->header()?array_keys($carrier->header()):[];
     }
 
     public function get($carrier, string $key) : ?string
     {
         assert($carrier instanceof Request);
-
-        return $carrier->headers->get($key);
+        return $carrier->header($key);
     }
 }
