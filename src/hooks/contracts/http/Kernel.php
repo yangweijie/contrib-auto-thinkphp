@@ -49,7 +49,6 @@ class Kernel implements ThinkHook
                     ->setAttribute(TraceAttributes::CODE_NAMESPACE, $class)
                     ->setAttribute(TraceAttributes::CODE_FILEPATH, $filename)
                     ->setAttribute(TraceAttributes::CODE_LINENO, $lineno);
-                var_dump($builder);
                 $parent = Context::getCurrent();
                 if ($request) {
                     /** @phan-suppress-next-line PhanAccessMethodInternal */

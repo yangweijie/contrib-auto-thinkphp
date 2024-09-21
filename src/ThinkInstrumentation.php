@@ -24,7 +24,7 @@ class ThinkInstrumentation
 //        hooks\contracts\console\Kernel::hook($instrumentation);
         hooks\contracts\http\kernel::hook($instrumentation);
 //        Hooks\Illuminate\Contracts\Queue\Queue::hook($instrumentation);
-//        hooks\foundation\Application::hook($instrumentation);
+        hooks\foundation\Application::hook($instrumentation);
 //        hooks\foundation\console\ServerCommand::hook($instrumentation);
     }
 
