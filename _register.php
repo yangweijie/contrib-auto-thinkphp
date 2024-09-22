@@ -12,6 +12,7 @@ $env = new Env();
 $env->load($app_path.DIRECTORY_SEPARATOR.'.env');
 foreach ($env->get() as $key => $value) {
     putenv($key.'='.$value);
+    $_ENV[$key] = $value;
 }
 if (class_exists(Sdk::class) && Sdk::isInstrumentationDisabled(ThinkInstrumentation::NAME) === true) {
     return;

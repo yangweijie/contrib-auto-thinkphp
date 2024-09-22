@@ -10,6 +10,7 @@ use OpenTelemetry\Context\Context;
 use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\ThinkHook;
 use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\ThinkHookTrait;
 use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\PostHookTrait;
+use think\console\input\Option;
 use function OpenTelemetry\Instrumentation\hook;
 use OpenTelemetry\SemConv\TraceAttributes;
 use Throwable;
@@ -21,12 +22,7 @@ class Command implements ThinkHook
 
     public function instrument(): void
     {
-        $this->hookExecute();
-    }
-
-    protected function hookExecute(): bool
-    {
-        return hook(
+        hook(
             ThinkCommand::class,
             'execute',
             pre: function (ThinkCommand $command, array $params, string $class, string $function, ?string $filename, ?int $lineno) {
@@ -53,7 +49,7 @@ class Command implements ThinkHook
 
                 $span = Span::fromContext($scope->context());
                 $span->addEvent('command finished', [
-                    'exit-code' => $exitCode,
+                    'exit-code' => $exitCode?? 0,
                 ]);
 
                 $this->endSpan($span, $exception);
