@@ -56,7 +56,7 @@ class Command implements ThinkHook
                     'exit-code' => $exitCode,
                 ]);
 
-                $this->endSpan($exception);
+                $this->endSpan($span, $exception);
             }
         );
     }

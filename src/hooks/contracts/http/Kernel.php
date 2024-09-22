@@ -82,7 +82,6 @@ class Kernel implements ThinkHook
                 }
                 $scope->detach();
                 $span = Span::fromContext($scope->context());
-//                var_dump($span);
 
                 $request = ($params[0] instanceof Request) ? $params[0] : null;
                 $rule = $request?->rule();
@@ -122,7 +121,7 @@ class Kernel implements ThinkHook
 
 //                var_dump($response->getHeader());
 
-                $this->endSpan($exception);
+                $this->endSpan($span, $exception);
             }
         );
     }

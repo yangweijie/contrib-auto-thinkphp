@@ -68,7 +68,7 @@ class Kernel implements ThinkHook
                     $span->setStatus(StatusCode::STATUS_ERROR);
                 }
 
-                $this->endSpan($exception);
+                $this->endSpan($span, $exception);
             }
         );
     }

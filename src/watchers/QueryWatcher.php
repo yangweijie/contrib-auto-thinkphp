@@ -10,8 +10,11 @@ use OpenTelemetry\SemConv\TraceAttributes;
 use think\App;
 use think\facade\Db;
 use think\helper\Str;
+use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\StrTrait;
 class QueryWatcher extends Watcher
 {
+    use StrTrait;
+
     public function __construct(
         private CachedInstrumentation $instrumentation,
     ) {
@@ -25,13 +28,13 @@ class QueryWatcher extends Watcher
         $driver = $app->db->getConfig('connections.'.$app->db->getConfig('default').'.type');
         $username = $app->db->getConfig('connections.'.$app->db->getConfig('default').'.username');
         Db::listen(function($sql, $runtime, $master) use($database, $driver, $username){
-            $this->handle($sql, $runtime, $master, $database, $driver, $username);
+            $this->handle($sql, (float)$runtime, $master, $database, $driver, $username);
         });
     }
 
     public function handle($sql, $runtime, $master, $database, $driver, $username){
         $nowInNs = (int) (microtime(true) * 1E9);
-        $operationName = Str::upper(Str::before($sql, ' '));
+        $operationName = Str::upper(self::before($sql, ' '));
         if (! in_array($operationName, ['SELECT', 'INSERT', 'UPDATE', 'DELETE'])) {
             $operationName = null;
         }
@@ -50,7 +53,7 @@ class QueryWatcher extends Watcher
         ];
 
         $attributes[TraceAttributes::DB_STATEMENT] = $sql;
-        $attributes['db.master'] = $master;
+        $attributes['db_master'] = $master;
         /** @psalm-suppress PossiblyInvalidArgument */
         $span->setAttributes($attributes);
         $span->end($nowInNs);

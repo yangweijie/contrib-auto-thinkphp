@@ -17,6 +17,7 @@
     "open-telemetry/api": "1.1.0beta2",
     "open-telemetry/sdk": "^1.0.5",
     "open-telemetry/exporter-otlp": "^1",
+    "open-telemetry/gen-otlp-protobuf": "1.2.*",
     "open-telemetry/opentelemetry-propagation-server-timing": "*",
     "open-telemetry/opentelemetry-propagation-traceresponse": "*",
     "open-telemetry/sem-conv": "1.27.*",

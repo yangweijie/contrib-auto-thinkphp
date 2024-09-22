@@ -23,3 +23,11 @@ The extension can be disabled via [runtime configuration](https://opentelemetry.
 OTEL_PHP_DISABLED_INSTRUMENTATIONS=thinkphp
 ```
 
+### Environment Variable
+
+[环境变量](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/)
+
+
+## context extend
+
+`deployment.environment.name` 开发环境

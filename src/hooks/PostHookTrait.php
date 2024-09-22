@@ -12,15 +12,13 @@ use Throwable;
 
 trait PostHookTrait
 {
-    private function endSpan(?Throwable $exception = null): void
+    private function endSpan(Span $span, ?Throwable $exception = null): void
     {
-        $scope = Context::storage()->scope();
-        if (!$scope) {
+//        var_dump(__FUNCTION__);
+//        var_dump($span);
+        if (!$span) {
             return;
         }
-
-        $scope->detach();
-        $span = Span::fromContext($scope->context());
 
         if ($exception) {
             $span->recordException($exception, [
