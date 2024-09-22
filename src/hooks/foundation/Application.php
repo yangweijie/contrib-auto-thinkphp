@@ -35,7 +35,7 @@ class Application implements ThinkHook
 //                $application->bind('think\exception\Handle', exception\Handle::class);
                 $this->registerWatchers($application, new LogWatcher($this->instrumentation));
 //                $this->registerWatchers($application, new QueryWatcher($this->instrumentation));
-            },
+            }
         );
     }
 

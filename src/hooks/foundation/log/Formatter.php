@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OpenTelemetry\Contrib\Instrumentation\Psr3;
+namespace OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\foundation\log;
 
 use Throwable;
 
