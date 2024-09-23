@@ -50,6 +50,7 @@ class Kernel implements ThinkHook
                     ->setAttribute(TraceAttributes::CODE_FILEPATH, $filename)
                     ->setAttribute(TraceAttributes::CODE_LINENO, $lineno);
                 $parent = Context::getCurrent();
+                trace($builder);
                 if ($request) {
                     /** @phan-suppress-next-line PhanAccessMethodInternal */
                     $parent = Globals::propagator()->extract($request, HeadersPropagator::instance());
@@ -89,8 +90,8 @@ class Kernel implements ThinkHook
                 if ($request && $rule instanceof Rule) {
                     $route = $rule->getRoute();
                     if($route){
-                        $span->updateName("{$request->method()} /" . ltrim($route->uri, '/'));
-                        $span->setAttribute(TraceAttributes::HTTP_ROUTE, $route->uri);
+                        $span->updateName("{$request->method()} /" . ltrim($route, '/'));
+                        $span->setAttribute(TraceAttributes::HTTP_ROUTE, $route);
                     }
                 }
 
