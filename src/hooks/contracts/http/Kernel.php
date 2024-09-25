@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\contracts\http;
 
+use OpenTelemetry\SemConv\ResourceAttributes;
 use think\Http as KernelContract;
 use think\Request;
 use think\Response;
@@ -13,6 +14,7 @@ use OpenTelemetry\API\Trace\SpanInterface;
 use OpenTelemetry\API\Trace\SpanKind;
 use OpenTelemetry\API\Trace\StatusCode;
 use OpenTelemetry\Context\Context;
+use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\Reflect;
 use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\ThinkHook;
 use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\ThinkHookTrait;
 use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\hooks\PostHookTrait;
@@ -50,7 +52,6 @@ class Kernel implements ThinkHook
                     ->setAttribute(TraceAttributes::CODE_FILEPATH, $filename)
                     ->setAttribute(TraceAttributes::CODE_LINENO, $lineno);
                 $parent = Context::getCurrent();
-                trace($builder);
                 if ($request) {
                     /** @phan-suppress-next-line PhanAccessMethodInternal */
                     $parent = Globals::propagator()->extract($request, HeadersPropagator::instance());
@@ -77,6 +78,8 @@ class Kernel implements ThinkHook
                 return [$request];
             },
             post: function (KernelContract $kernel, array $params, ?Response $response, ?Throwable $exception) {
+                $app = Reflect::getClassProperty($kernel, 'app');
+                $envName = Reflect::getClassProperty($app, 'envName');
                 $scope = Context::storage()->scope();
                 if (!$scope) {
                     return $response;
@@ -95,12 +98,14 @@ class Kernel implements ThinkHook
                     }
                 }
 
+                $deploy_env = (getenv('APP_DEBUG') == true || $envName != '') ?'test':'prod';
+                $span->setAttribute(ResourceAttributes::DEPLOYMENT_ENVIRONMENT_NAME, $deploy_env);
+
                 if ($response) {
                     if ($response->getCode() >= 500) {
                         $span->setStatus(StatusCode::STATUS_ERROR);
                     }
                     $span->setAttribute(TraceAttributes::HTTP_RESPONSE_STATUS_CODE, $response->getCode());
-//                    $span->setAttribute(TraceAttributes::NETWORK_PROTOCOL_VERSION, $response->getHeader(''));
                     $span->setAttribute(TraceAttributes::HTTP_RESPONSE_BODY_SIZE, $response->getHeader('Content-Length'));
 
                     // Propagate server-timing header to response, if ServerTimingPropagator is present
@@ -119,8 +124,6 @@ class Kernel implements ThinkHook
                         $prop->inject($response, ResponsePropagationSetter::instance(), $scope->context());
                     }
                 }
-
-//                var_dump($response->getHeader());
 
                 $this->endSpan($span, $exception);
             }

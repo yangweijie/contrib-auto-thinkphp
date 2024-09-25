@@ -21,7 +21,8 @@
     "open-telemetry/opentelemetry-propagation-server-timing": "*",
     "open-telemetry/opentelemetry-propagation-traceresponse": "*",
     "open-telemetry/sem-conv": "1.27.*",
-    "psr/simple-cache": "3.0.0"
+    "psr/simple-cache": "3.0.0",
+    "funkjedi/composer-include-files": "^1.0"
   },
   "require-dev": {
     "guzzlehttp/guzzle": "*",

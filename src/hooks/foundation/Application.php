@@ -28,7 +28,8 @@ class Application implements ThinkHook
             FoundationalApplication::class,
             'initialize',
             post: function (FoundationalApplication $application, array $params, mixed $returnValue, ?Throwable $exception) {
-                $application->bind('OpenTelemetry\API\Instrumentation\CachedInstrumentation', $this->instrumentation);
+
+//                $application->bind('OpenTelemetry\API\Instrumentation\CachedInstrumentation', $this->instrumentation);
                 $application->bind('think\exception\Handle', exception\Handle::class);
                 $this->registerWatchers($application, new LogWatcher($this->instrumentation));
                 $this->registerWatchers($application, new QueryWatcher($this->instrumentation));

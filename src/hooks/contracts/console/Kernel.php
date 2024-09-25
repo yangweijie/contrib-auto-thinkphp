@@ -26,17 +26,7 @@ class Kernel implements ThinkHook
 
     public function instrument(): void
     {
-        if (ThinkInstrumentation::shouldTraceCli()) {
-//            var_dump(111);
-            $this->hookHandle();
-        }else{
-//            var_dump(222);
-        }
-    }
-
-    private function hookHandle(): bool
-    {
-        return hook(
+        hook(
             KernelContract::class,
             'handle',
             pre: function (KernelContract $kernel, array $params, string $class, string $function, ?string $filename, ?int $lineno) {

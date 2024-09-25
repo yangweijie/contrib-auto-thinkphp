@@ -1,8 +1,6 @@
 # contrib-auto-thinkphp
 OpenTelemetry auto-instrumentation for ThinkPHP
 
-This is a read-only subtree split of https://github.com/open-telemetry/opentelemetry-php-contrib.
-
 # OpenTelemetry ThinkPHP auto-instrumentation
 
 Please read https://opentelemetry.io/docs/instrumentation/php/automatic/ for instructions on how to

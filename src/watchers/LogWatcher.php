@@ -41,11 +41,6 @@ class LogWatcher extends Watcher
             }
             $spanContext = Context::getCurrent();
             $span = Span::fromContext($spanContext)->getContext();
-
-            if ($span->isValid()) {
-                $context['traceId'] = $span->getTraceId();
-                $context['spanId'] = $span->getSpanId();
-            }
             $record = (new LogRecord($body))
                 ->setSeverityText($params[1])
                 ->setSeverityNumber(Psr3::severityNumber($level))

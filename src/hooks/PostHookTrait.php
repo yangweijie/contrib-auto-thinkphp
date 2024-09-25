@@ -14,8 +14,6 @@ trait PostHookTrait
 {
     private function endSpan(Span $span, ?Throwable $exception = null): void
     {
-//        var_dump(__FUNCTION__);
-//        var_dump($span);
         if (!$span) {
             return;
         }
