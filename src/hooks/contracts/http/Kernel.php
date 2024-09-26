@@ -72,14 +72,12 @@ class Kernel implements ThinkHook
                         ->startSpan();
 //                    $request->attributes->set(SpanInterface::class, $span);
                 } else {
-                    $span = $builder->startSpan();
+                    $span = $builder->setParent($parent)->startSpan();
                 }
                 Context::storage()->attach($span->storeInContext($parent));
                 return [$request];
             },
             post: function (KernelContract $kernel, array $params, ?Response $response, ?Throwable $exception) {
-                $app = Reflect::getClassProperty($kernel, 'app');
-                $envName = Reflect::getClassProperty($app, 'envName');
                 $scope = Context::storage()->scope();
                 if (!$scope) {
                     return $response;
@@ -97,9 +95,6 @@ class Kernel implements ThinkHook
                         $span->setAttribute(TraceAttributes::HTTP_ROUTE, $route);
                     }
                 }
-
-                $deploy_env = (getenv('APP_DEBUG') == true || $envName != '') ?'test':'prod';
-                $span->setAttribute(ResourceAttributes::DEPLOYMENT_ENVIRONMENT_NAME, $deploy_env);
 
                 if ($response) {
                     if ($response->getCode() >= 500) {
@@ -124,7 +119,7 @@ class Kernel implements ThinkHook
                         $prop->inject($response, ResponsePropagationSetter::instance(), $scope->context());
                     }
                 }
-
+                $span->addEvent('request end', []);
                 $this->endSpan($span, $exception);
             }
         );
