@@ -1,4 +1,4 @@
-#/usr/bin/shell
+#!/usr/bin/bash
 
 env OTEL_PHP_AUTOLOAD_ENABLED=true
 env OTEL_SERVICE_NAME=default
