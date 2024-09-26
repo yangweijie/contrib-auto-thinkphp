@@ -47,13 +47,16 @@ class QueryWatcher extends Watcher
 
         $attributes = [
             TraceAttributes::DB_SYSTEM => $driver,
-            TraceAttributes::DB_NAME => $database,
-            TraceAttributes::DB_OPERATION => $operationName,
-            TraceAttributes::DB_USER => $username,
+            TraceAttributes::DB_NAMESPACE => $database,
+            TraceAttributes::DB_OPERATION_NAME => $operationName,
+            'db.user' => $username,
         ];
 
-        $attributes[TraceAttributes::DB_STATEMENT] = $sql;
+        $attributes[TraceAttributes::DB_QUERY_TEXT] = $sql;
         $attributes['db_master'] = $master;
+        if(str_contains($sql, 'CONNECT:')){
+            $span->addEvent('database.connected');
+        }
         /** @psalm-suppress PossiblyInvalidArgument */
         $span->setAttributes($attributes);
         $span->end($nowInNs);
