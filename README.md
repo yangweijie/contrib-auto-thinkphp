@@ -35,6 +35,16 @@ OTEL_PHP_DISABLED_INSTRUMENTATIONS=thinkphp
 
 ![配置](images\config.png)
 
+在`composer.json`中配置 extra log 的driver 文件 用于临时修复TP var_export 获得引用对象变量报错的bug。等官方修复了我再把这段检测去掉。
+
+~~~
+    "extra": {
+        "include_files": [
+            "vendor/yangweijie/opentelemetry-auto-thinkphp/src/polyfill/log/driver/File.php"
+        ]
+    },
+~~~
+
 #### 命令行
 
 ##### 官方的方式 执行命令前带上环境变量配置
@@ -177,6 +187,10 @@ extract_ip(log) | code=200
 SELECT * FROM "default" WHERE trace_id='7613688775511defb36d27f7869e612d'
 ~~~
 
+![效果图](images\log1.png)
+![查询](images\log2.png)
+![详情](images\log_detail.png)
+![table详情](images\log_detail_table.png)
 ## trace
 
 > trace 主要是同一个请求内 不同span 的组合 同属于一个trace_id。
@@ -197,7 +211,7 @@ SELECT * FROM "default" WHERE trace_id='7613688775511defb36d27f7869e612d'
 #### SpanKind
 
 | `SpanKind` | 调用方向 | 通信风格 |
-| --- |  | --- |
+| --- |---| --- |
 | `CLIENT` | 发起 | request/response |
 | `SERVER` | 进入 | request/response |
 | `PRODUCER` | 发起 | deferred execution |
@@ -241,5 +255,10 @@ SELECT * FROM "default" WHERE trace_id='7613688775511defb36d27f7869e612d'
 }
 
 ~~~
+
+### 效果图
+![trace](images\trace.png)
+![trace 详情1](images\trace_detail.png)
+![trace 详情2](images\trace_detail2.png)
 
 

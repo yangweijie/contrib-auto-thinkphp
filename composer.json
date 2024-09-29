@@ -21,7 +21,7 @@
     "open-telemetry/opentelemetry-propagation-server-timing": "*",
     "open-telemetry/opentelemetry-propagation-traceresponse": "*",
     "open-telemetry/sem-conv": "1.27.*",
-    "psr/simple-cache": "3.0.0",
+    "psr/simple-cache": "*",
     "funkjedi/composer-include-files": "^1.0"
   },
   "require-dev": {
@@ -44,5 +44,9 @@
     "allow-plugins": {
       "php-http/discovery": false
     }
+  },
+  "scripts": {
+    "post-package-install": "@composer dumpautoload",
+    "post-package-update": "@composer dumpautoload"
   }
 }

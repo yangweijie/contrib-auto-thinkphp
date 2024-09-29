@@ -3,9 +3,12 @@
 
 declare(strict_types=1);
 
+use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\PreInstall;
 use OpenTelemetry\Contrib\Instrumentation\ThinkPHP\ThinkInstrumentation;
 use OpenTelemetry\SDK\Sdk;
 use think\Env;
+
+PreInstall::checkComposerJson();
 
 // 命令行
 if(PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg') {
@@ -15,6 +18,7 @@ if(PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg') {
     foreach ($env->get() as $key => $value) {
         putenv($key.'='.$value);
         $_ENV[$key] = $value;
+        $_SERVER[$key] = $value;
     }
 }
 
