@@ -33,7 +33,7 @@ OTEL_PHP_DISABLED_INSTRUMENTATIONS=thinkphp
 
 然后登录后台，在“采集”-> “日志”-> “自定义”-> “OTLP Collector” 中复制 出 endpoint 和  Authorization 
 
-![配置](images\config.png)
+![配置](images/config.png)
 
 在`composer.json`中配置 extra log 的driver 文件 用于临时修复TP var_export 获得引用对象变量报错的bug。等官方修复了我再把这段检测去掉。
 
