@@ -187,10 +187,10 @@ extract_ip(log) | code=200
 SELECT * FROM "default" WHERE trace_id='7613688775511defb36d27f7869e612d'
 ~~~
 
-![效果图](images\log1.png)
-![查询](images\log2.png)
-![详情](images\log_detail.png)
-![table详情](images\log_detail_table.png)
+![效果图](images/log1.png)
+![查询](images/log2.png)
+![详情](images/log_detail.png)
+![table详情](images/log_detail_table.png)
 ## trace
 
 > trace 主要是同一个请求内 不同span 的组合 同属于一个trace_id。
@@ -257,8 +257,8 @@ SELECT * FROM "default" WHERE trace_id='7613688775511defb36d27f7869e612d'
 ~~~
 
 ### 效果图
-![trace](images\trace.png)
-![trace 详情1](images\trace_detail.png)
-![trace 详情2](images\trace_detail2.png)
+![trace](images/trace.png)
+![trace 详情1](images/trace_detail.png)
+![trace 详情2](images/trace_detail2.png)
 
 
